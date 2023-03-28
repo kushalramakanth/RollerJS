@@ -7,7 +7,12 @@ export class Roller {
     // so any invalid values should default to 6 to represent the common 
     // six-sided die.
     constructor(faces: number) {
-        faces;
+        this._faces = faces;
+        //initialize distribution and last
+        this._distribution = new Map();
+        for(let i = 1; i <= faces; i++){
+            this._distribution.set(i, 0);
+        }
     }
 
     // specifies which number should be rolled and returns the recorded roll. 
@@ -20,14 +25,23 @@ export class Roller {
     //   3. the distribution should update the distribution record so that the
     //      key (value rolled) has an updated value that increases the number
     //      of rolls for that face by 1
-    roll(value: number): number{
-        return value;
+    roll(value: number): number {
+        if(value > 0 && value <= this._faces) {
+            this._last = value;
+            var previousValue = this._distribution.get(value);
+            this._distribution.set(value, previousValue+1);
+            return value;
+        }
+
+        else {
+            return 0;
+        }
     }
 
     // returns the value of the latest die roll. If no rolls have been made
     // yet, then it should return 0.
     last(): number {
-        return 0;
+        return this._last;
     }
 
     // returns a Map that represents the current distribution of rolls for each
@@ -36,6 +50,6 @@ export class Roller {
     // rolled. Even if a face has not yet been rolled, its key should have a
     // value of 0.
     distribution(): Map<number, number>{
-        return new Map<number, number>();
+        return this._distribution;
     }
 } // end of Roller class
